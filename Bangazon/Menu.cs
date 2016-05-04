@@ -123,7 +123,34 @@ namespace Bangazon
 
         public void OrderProducts()
         {
+            Console.Clear();
+            var products = sqlData.GetProducts();
+            var exitVal = products.Last().IdProduct + 1;
+            int? userInput = null;
 
+            while (userInput != exitVal)
+            {
+                Console.WriteLine("What do you want:");
+                foreach (var p in products)
+                {
+                    Console.WriteLine(p.IdProduct + ". " + p.Name);
+                }
+                Console.Write("... \n" + exitVal + ". Return to main menu \n");
+                var stringInput = Console.ReadLine();
+                userInput = Convert.ToInt32(stringInput);
+
+                if (userInput != exitVal)
+                {
+                    Cart.Add((int)userInput);
+                    Console.Clear();
+                }
+            }
+
+            if (exitVal == userInput)
+            {
+                Console.Clear();
+                ShowMenu();
+            }
         }
 
         public void CompleteOrder()
