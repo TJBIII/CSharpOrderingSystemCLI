@@ -175,7 +175,7 @@ namespace Bangazon
                         total += price;
                     }
                 }
-                Console.Write("Your total is " + total + ". Ready to check out? \n[y/n] >>>");
+                Console.Write("Your total is " + total + ". \n Ready to check out? \n[y/n] >>>");
                 var readyToCheckout = Console.ReadLine();
                 if (readyToCheckout.ToLower() == "n") ShowMenu();
                 else if (readyToCheckout.ToLower() == "y") // only allow checkout on "Y"
@@ -233,6 +233,23 @@ namespace Bangazon
 
         public void SeeProductPopularity()
         {
+            Console.Clear();
+            var productsOrdered = sqlData.GetOrderProductsCount();
+            foreach (var p in productsOrdered)
+            {
+                var prodAttr = sqlData.GetSingleProduct(p.IdProduct);
+                p.Name = prodAttr[0].Name;
+                p.Price = prodAttr[0].Price;
+
+                var custsPerProd = sqlData.GetCustomersPerProduct(p.IdProduct);
+                p.CustomerCount = custsPerProd[0].CustomerCount;
+
+                var total = Convert.ToDouble(p.Price) * p.Count;
+                Console.WriteLine(p.Name + " purchased " + p.Count + " times by " + p.CustomerCount + " people for $" + total + " total.");
+            }
+            Console.WriteLine(">>> Press any key\n");
+            Console.ReadLine();
+            ShowMenu();
 
         }
     }
