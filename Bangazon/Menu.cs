@@ -155,7 +155,80 @@ namespace Bangazon
 
         public void CompleteOrder()
         {
+            Console.Clear();
+            if (Cart.Count == 0)
+            {
+                Console.WriteLine("Nothing in your cart... Press any key to see the main menu.");
+                Console.ReadKey();
+                ShowMenu();
+            }
+            else
+            {
+                double total = 0;
+                // get back cost of products for each Idproduct in cart
+                foreach (var item in Cart)
+                {
+                    if (item != 6)
+                    {
+                        var products = sqlData.GetSingleProduct(item);
+                        var price = Convert.ToDouble(products[0].Price);
+                        total += price;
+                    }
+                }
+                Console.Write("Your total is " + total + ". Ready to check out? \n[y/n] >>>");
+                var readyToCheckout = Console.ReadLine();
+                if (readyToCheckout.ToLower() == "n") ShowMenu();
+                else if (readyToCheckout.ToLower() == "y") // only allow checkout on "Y"
+                {
+                    // choose a customer
+                    CustomerOrder co = new CustomerOrder();
+                    ShowCustomerList();
+                    var strId = Console.ReadLine();
+                    var custId = Convert.ToInt32(strId);
 
+                    // get payment options
+                    var paymentOptionsForCust = sqlData.GetPaymentOptions(custId);
+                    Console.WriteLine("Choose a payment option: \n>>>");
+                    foreach (var option in paymentOptionsForCust)
+                    {
+                        Console.WriteLine(option.IdPaymentOption + ". " + option.Name);
+                    }
+                    var strSelectedPayment = Console.ReadLine();
+                    var selectedPayment = Convert.ToInt32(strSelectedPayment);
+
+                    // get orders
+                    int orderId = 1;
+                    var currentOrders = sqlData.GetCustomerOrders();
+                    if (currentOrders.Count != 0) orderId = currentOrders.Last().IdCustomerOrder + 1;
+
+                    co.IdCustomerOrder = orderId;
+                    co.IdPaymentOption = selectedPayment;
+                    co.IdCustomer = custId;
+                    co.OrderNumber = "ORDER NUMBER";
+                    co.DateCreated = DateTime.Now.ToString();
+                    co.PaymentType = "CREDIT";
+                    co.Shipping = "FEDEX";
+
+                    sqlData.CreateCustomerOrder(co);
+                    // add each order product to OrderProducts
+                    foreach (var item in Cart)
+                    {
+                        var currProducts = sqlData.GetOrderProducts();
+                        var count = 0;
+                        if (currProducts.Count != 0) count = currProducts.Last().IdOrderProducts;
+                        OrderProducts op = new OrderProducts();
+                        op.IdOrderProducts = count + 1;
+                        op.IdProduct = item;
+                        op.IdCustomerOrder = orderId;
+                        op.IdCustomer = custId;
+                        sqlData.CreateOrderProduct(op);
+                    }
+
+                    Console.WriteLine("Order Processed. Press any key.");
+                    Console.ReadLine();
+                    ShowMenu();
+                }
+            }
         }
 
         public void SeeProductPopularity()
