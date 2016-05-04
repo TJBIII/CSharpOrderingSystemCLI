@@ -24,12 +24,33 @@ namespace Bangazon
 
         public void CreatePaymentOption(PaymentOption po)
         {
-            
+            string command = String.Format(@"INSERT INTO PaymentOption 
+            (IdPaymentOption, IdCustomer, Name, AccountNumber) 
+            VALUES ('{0}', '{1}', '{2}', '{3}')",
+            GetNextPaymentOptionId(), po.IdCustomer, po.Name, po.AccountNumber);
+
+            update(command);
         }
 
         public int GetNextPaymentOptionId()
         {
-            return 0;
+            int nextId = 0;
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.CommandText = "SELECT MAX(IdPaymentOption) FROM PaymentOption";
+            cmd.Connection = _sqlConnection;
+
+            _sqlConnection.Open();
+            using (SqlDataReader dataReader = cmd.ExecuteReader())
+            {
+                while (dataReader.Read())
+                {
+                    nextId = dataReader.GetInt32(0);
+                }
+            }
+            _sqlConnection.Close();
+
+            return nextId + 1;
         }
 
         public void CreateOrderProduct(OrderProducts op)

@@ -104,7 +104,21 @@ namespace Bangazon
 
         public void AddPaymentOption()
         {
+            Console.Clear();
+            ShowCustomerList();
+            PaymentOption po = new PaymentOption();
+            var id = Console.ReadLine();
+            po.IdCustomer = Convert.ToInt32(id);
 
+            Console.Write("Enter payment type \n>>>");
+            po.Name = Console.ReadLine();
+
+            Console.Write("Enter account number \n>>>");
+            po.AccountNumber = Console.ReadLine();
+
+            Console.WriteLine("Payment option created!");
+            sqlData.CreatePaymentOption(po);
+            ShowMenu();
         }
 
         public void OrderProducts()
