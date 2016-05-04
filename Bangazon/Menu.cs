@@ -64,12 +64,42 @@ namespace Bangazon
 
         public void ShowCustomerList()
         {
-
+            Console.WriteLine("Who?");
+            var allCustomers = sqlData.GetCustomers();
+            foreach (var c in allCustomers)
+            {
+                Console.WriteLine("{0}: {1} {2}", c.IdCustomer, c.FirstName, c.LastName);
+            }
+            Console.WriteLine(">>>");
+            Console.ReadKey();
         }
 
         public void CreateNewCustomer()
         {
+            Console.Clear();
+            var allc = sqlData.GetCustomers();
+            var count = allc.Last().IdCustomer;
 
+            Customer c = new Customer();
+            c.IdCustomer = count + 1;
+            Console.WriteLine("Enter first name \n>>>");
+            c.FirstName = Console.ReadLine();
+            Console.WriteLine("Enter last name \n>>>");
+            c.LastName = Console.ReadLine();
+            Console.WriteLine("Enter street address \n>>>");
+            c.StreetAddress = Console.ReadLine();
+            Console.WriteLine("Enter city \n>>>");
+            c.City = Console.ReadLine();
+            Console.WriteLine("Enter state \n>>>");
+            c.State = Console.ReadLine();
+            Console.WriteLine("Enter postal code \n>>>");
+            c.PostalCode = Console.ReadLine();
+            Console.WriteLine("Enter phone number \n>>>");
+            c.PhoneNumber = Console.ReadLine();
+
+            Console.WriteLine("Customer created!");
+            sqlData.CreateCustomer(c);
+            ShowMenu();
         }
 
         public void AddPaymentOption()
