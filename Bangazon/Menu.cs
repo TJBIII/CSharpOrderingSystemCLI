@@ -169,13 +169,10 @@ namespace Bangazon
                 Console.WriteLine("Your cart contains: \n");
                 foreach (var item in Cart)
                 {
-                    if (item != 6)
-                    {
-                        Product p = sqlData.GetSingleProduct(item);
-                        Console.WriteLine("{0} for {1}", p.Name, p.Price);
-                        var price = Convert.ToDouble(p.Price);
-                        total += price;
-                    }
+                    Product p = sqlData.GetSingleProduct(item);
+                    Console.WriteLine("{0} for {1}", p.Name, p.Price);
+                    var price = Convert.ToDouble(p.Price);
+                    total += price;
                 }
                 Console.Write("Your total is " + total + ". \n Ready to check out? \n[y/n] >>>");
                 var readyToCheckout = Console.ReadLine();

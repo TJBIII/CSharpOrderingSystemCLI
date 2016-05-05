@@ -13,6 +13,7 @@ namespace Bangazon
 
         public void CreateCustomer(Customer c)
         {
+            //create a customer in the Customer table
             string command = String.Format(@"INSERT INTO Customer 
             (FirstName, LastName, StreetAddress, City, StateProvince, PostalCode, PhoneNumber, IdCustomer)
             VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",
@@ -23,6 +24,7 @@ namespace Bangazon
 
         public void CreatePaymentOption(PaymentOption po)
         {
+            //create a payment option in PaymentOption table
             string command = String.Format(@"INSERT INTO PaymentOption 
             (IdPaymentOption, IdCustomer, Name, AccountNumber) 
             VALUES ('{0}', '{1}', '{2}', '{3}')",
@@ -33,6 +35,8 @@ namespace Bangazon
 
         public int GetNextPaymentOptionId()
         {
+            //Get the next unique id value for the PaymentOption table
+                //should be able to navigate around this with table setup
             int nextId = 0;
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -54,6 +58,7 @@ namespace Bangazon
 
         public void CreateOrderProduct(OrderProducts op)
         {
+            //create entry in the OrderProducts table to link order/customer/customerorder
             string command = String.Format(@"INSERT INTO OrderProducts 
             (IdOrderProducts, IdProduct, IdCustomerOrder, IdCustomer)
             VALUES ({0}, {1}, {2}, {3})",
@@ -64,6 +69,7 @@ namespace Bangazon
 
         public void CreateCustomerOrder(CustomerOrder co)
         {
+            //create entry in CustomerOrder table
             string command = String.Format(@"INSERT INTO CustomerOrder 
             (IdCustomerOrder, OrderNumber, DateCreated, IdCustomer, PaymentType, Shipping, IdPaymentOption)
             VALUES ({0}, '{1}', '{2}', {3}, '{4}', '{5}', {6})",
@@ -74,6 +80,7 @@ namespace Bangazon
 
         public List<Customer> GetCustomers()
         {
+            //get list of all customers
             List<Customer> customerList = new List<Customer>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -108,6 +115,7 @@ namespace Bangazon
 
         public List<Product> GetProducts()
         {
+            //get list of all products
             List<Product> productList = new List<Product>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -136,6 +144,7 @@ namespace Bangazon
 
         public Product GetSingleProduct(int id)
         {
+            //get the product that matches the id argument
             Product prod = new Product();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -161,6 +170,7 @@ namespace Bangazon
 
         public List<OrderProducts> GetOrderProducts()
         {
+            //get list of all OrderProducts table entries
             List<OrderProducts> orderProductsList = new List<OrderProducts>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -187,6 +197,7 @@ namespace Bangazon
 
         public List<OrderProducts> GetOrderProductsCount()
         {
+            //the number of times each product was ordered
             List<OrderProducts> orderProductsList = new List<OrderProducts>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -216,6 +227,7 @@ namespace Bangazon
 
         public List<OrderProducts> GetCustomersPerProduct(int prodId)
         {
+            //how many customers ordered each product
             List<OrderProducts> customersPerProductsList = new List<OrderProducts>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -276,6 +288,7 @@ namespace Bangazon
 
         public List<PaymentOption> GetPaymentOptions(int custId)
         {
+            //list of payment options corresponding to the given customer id
             List<PaymentOption> paymentOptionList = new List<PaymentOption>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
