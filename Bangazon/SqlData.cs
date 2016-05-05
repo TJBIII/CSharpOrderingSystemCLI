@@ -19,7 +19,6 @@ namespace Bangazon
             c.FirstName, c.LastName, c.StreetAddress, c.City, c.State, c.PostalCode, c.PhoneNumber, c.IdCustomer);
 
             update(command);
-
         }
 
         public void CreatePaymentOption(PaymentOption po)
@@ -55,12 +54,22 @@ namespace Bangazon
 
         public void CreateOrderProduct(OrderProducts op)
         {
-            
+            string command = String.Format(@"INSERT INTO OrderProducts 
+            (IdOrderProducts, IdProduct, IdCustomerOrder, IdCustomer)
+            VALUES ({0}, {1}, {2}, {3})",
+            op.IdOrderProducts, op.IdProduct, op.IdCustomerOrder, op.IdCustomer);
+
+            update(command);
         }
 
         public void CreateCustomerOrder(CustomerOrder co)
         {
-            
+            string command = String.Format(@"INSERT INTO CustomerOrder 
+            (IdCustomerOrder, OrderNumber, DateCreated, IdCustomer, PaymentType, Shipping, IdPaymentOption)
+            VALUES ({0}, '{1}', '{2}', {3}, '{4}', '{5}', {6})",
+            co.IdCustomerOrder, co.OrderNumber, co.DateCreated, co.IdCustomer, co.PaymentType, co.Shipping, co.IdPaymentOption);
+
+            update(command);
         }
 
         public List<Customer> GetCustomers()
@@ -125,9 +134,9 @@ namespace Bangazon
             return productList;
         }
 
-        public List<Product> GetSingleProduct(int id)
+        public Product GetSingleProduct(int id)
         {
-            List<Product> matchingProduct = new List<Product>();
+            Product prod = new Product();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
             cmd.CommandText = "SELECT IdProduct, Name, Description, Price, IdProductType FROM Product WHERE IdProduct = " + id;
@@ -138,19 +147,16 @@ namespace Bangazon
             {
                 while (dataReader.Read())
                 {
-                    Product prod = new Product();
                     prod.IdProduct = dataReader.GetInt32(0);
                     prod.Name = dataReader.GetString(1);
                     prod.Description = dataReader.GetString(2);
                     prod.Price = dataReader.GetString(3);
                     prod.IdProductType = dataReader.GetInt32(4);
-
-                    matchingProduct.Add(prod);
                 }
             }
             _sqlConnection.Close();
 
-            return matchingProduct;
+            return prod;
         }
 
         public List<OrderProducts> GetOrderProducts()

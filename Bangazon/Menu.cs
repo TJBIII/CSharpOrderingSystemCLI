@@ -166,12 +166,14 @@ namespace Bangazon
             {
                 double total = 0;
                 // get back cost of products for each Idproduct in cart
+                Console.WriteLine("Your cart contains: \n");
                 foreach (var item in Cart)
                 {
                     if (item != 6)
                     {
-                        var products = sqlData.GetSingleProduct(item);
-                        var price = Convert.ToDouble(products[0].Price);
+                        Product p = sqlData.GetSingleProduct(item);
+                        Console.WriteLine("{0} for {1}", p.Name, p.Price);
+                        var price = Convert.ToDouble(p.Price);
                         total += price;
                     }
                 }
@@ -237,9 +239,9 @@ namespace Bangazon
             var productsOrdered = sqlData.GetOrderProductsCount();
             foreach (var p in productsOrdered)
             {
-                var prodAttr = sqlData.GetSingleProduct(p.IdProduct);
-                p.Name = prodAttr[0].Name;
-                p.Price = prodAttr[0].Price;
+                var prod = sqlData.GetSingleProduct(p.IdProduct);
+                p.Name = prod.Name;
+                p.Price = prod.Price;
 
                 var custsPerProd = sqlData.GetCustomersPerProduct(p.IdProduct);
                 p.CustomerCount = custsPerProd[0].CustomerCount;
@@ -250,7 +252,6 @@ namespace Bangazon
             Console.WriteLine(">>> Press any key\n");
             Console.ReadLine();
             ShowMenu();
-
         }
     }
 }

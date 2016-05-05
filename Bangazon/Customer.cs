@@ -15,7 +15,26 @@ namespace Bangazon
         public string StreetAddress { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public string PostalCode { get; set; }
+        public string PostalCode
+        {
+            get
+            {
+                return PostalCode;
+            }
+            set
+            {
+                if (value.Length < 6)
+                {
+                    PostalCode = value;
+                }
+                else
+                {
+                    Console.WriteLine("Postal Code should be 5 digits");
+                    Console.ReadKey();
+                }
+            }
+        }
+
         public string PhoneNumber { get; set; }
     }
 }
