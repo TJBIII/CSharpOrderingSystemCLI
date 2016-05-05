@@ -13,17 +13,18 @@ namespace Bangazon
 
         public void CreateCustomer(Customer c)
         {
+            //create a customer in the Customer table
             string command = String.Format(@"INSERT INTO Customer 
             (FirstName, LastName, StreetAddress, City, StateProvince, PostalCode, PhoneNumber, IdCustomer)
             VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",
             c.FirstName, c.LastName, c.StreetAddress, c.City, c.State, c.PostalCode, c.PhoneNumber, c.IdCustomer);
 
             update(command);
-
         }
 
         public void CreatePaymentOption(PaymentOption po)
         {
+            //create a payment option in PaymentOption table
             string command = String.Format(@"INSERT INTO PaymentOption 
             (IdPaymentOption, IdCustomer, Name, AccountNumber) 
             VALUES ('{0}', '{1}', '{2}', '{3}')",
@@ -34,6 +35,8 @@ namespace Bangazon
 
         public int GetNextPaymentOptionId()
         {
+            //Get the next unique id value for the PaymentOption table
+                //should be able to navigate around this with table setup
             int nextId = 0;
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -55,16 +58,29 @@ namespace Bangazon
 
         public void CreateOrderProduct(OrderProducts op)
         {
-            
+            //create entry in the OrderProducts table to link order/customer/customerorder
+            string command = String.Format(@"INSERT INTO OrderProducts 
+            (IdOrderProducts, IdProduct, IdCustomerOrder, IdCustomer)
+            VALUES ({0}, {1}, {2}, {3})",
+            op.IdOrderProducts, op.IdProduct, op.IdCustomerOrder, op.IdCustomer);
+
+            update(command);
         }
 
         public void CreateCustomerOrder(CustomerOrder co)
         {
-            
+            //create entry in CustomerOrder table
+            string command = String.Format(@"INSERT INTO CustomerOrder 
+            (IdCustomerOrder, OrderNumber, DateCreated, IdCustomer, PaymentType, Shipping, IdPaymentOption)
+            VALUES ({0}, '{1}', '{2}', {3}, '{4}', '{5}', {6})",
+            co.IdCustomerOrder, co.OrderNumber, co.DateCreated, co.IdCustomer, co.PaymentType, co.Shipping, co.IdPaymentOption);
+
+            update(command);
         }
 
         public List<Customer> GetCustomers()
         {
+            //get list of all customers
             List<Customer> customerList = new List<Customer>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -99,6 +115,7 @@ namespace Bangazon
 
         public List<Product> GetProducts()
         {
+            //get list of all products
             List<Product> productList = new List<Product>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -125,9 +142,10 @@ namespace Bangazon
             return productList;
         }
 
-        public List<Product> GetSingleProduct(int id)
+        public Product GetSingleProduct(int id)
         {
-            List<Product> matchingProduct = new List<Product>();
+            //get the product that matches the id argument
+            Product prod = new Product();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
             cmd.CommandText = "SELECT IdProduct, Name, Description, Price, IdProductType FROM Product WHERE IdProduct = " + id;
@@ -138,23 +156,21 @@ namespace Bangazon
             {
                 while (dataReader.Read())
                 {
-                    Product prod = new Product();
                     prod.IdProduct = dataReader.GetInt32(0);
                     prod.Name = dataReader.GetString(1);
                     prod.Description = dataReader.GetString(2);
                     prod.Price = dataReader.GetString(3);
                     prod.IdProductType = dataReader.GetInt32(4);
-
-                    matchingProduct.Add(prod);
                 }
             }
             _sqlConnection.Close();
 
-            return matchingProduct;
+            return prod;
         }
 
         public List<OrderProducts> GetOrderProducts()
         {
+            //get list of all OrderProducts table entries
             List<OrderProducts> orderProductsList = new List<OrderProducts>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -181,6 +197,7 @@ namespace Bangazon
 
         public List<OrderProducts> GetOrderProductsCount()
         {
+            //the number of times each product was ordered
             List<OrderProducts> orderProductsList = new List<OrderProducts>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -210,6 +227,7 @@ namespace Bangazon
 
         public List<OrderProducts> GetCustomersPerProduct(int prodId)
         {
+            //how many customers ordered each product
             List<OrderProducts> customersPerProductsList = new List<OrderProducts>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -270,6 +288,7 @@ namespace Bangazon
 
         public List<PaymentOption> GetPaymentOptions(int custId)
         {
+            //list of payment options corresponding to the given customer id
             List<PaymentOption> paymentOptionList = new List<PaymentOption>();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = System.Data.CommandType.Text;
